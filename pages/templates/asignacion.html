@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Asignaciones Profesores{% endblock %}
+
+{% block content %}
+    <h1>Asignaciones del Profesor</h1>
+     {% if profesor %}
+        <p><strong>Profesor:</strong> {{ profesor.names }} ({{ profesor.codeprof }})</p>
+        <p><strong>Cargo:</strong>  <a href="{{ url_for('onlylistxalumn2DIR', codegrad=dirgrado.codegrad) }}">{{ profesor.cargo }}</a></p>
+    {% endif %}
+
+    <h2>Grados y asignaturas </h2>
+    {% if grados %}
+        <table class="table table-hover table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>CodeGrad</th>
+                <th>Nombre Grado</th>
+                <th>Code Materia/add notas</th>
+                <th>Asignatura/planilla</th>
+                
+                
+            </tr>
+            </thead>
+            {% for g in grados %}
+            <tr>
+                <td>{{ g.codegrad }}</td>
+                <td>{{ g.name }}</td>
+                <td>
+                <a href="{{ url_for('grado', codemate=g.codemate) }}" class="text-decoration-none">
+                    {{ g.codemate }}
+                </a>
+                </td>
+                <td>
+                <a href="{{ url_for('onlyeditnotas', codemate=g.codemate) }}" class="text-decoration-none">
+                    {{ g.nombre }}
+                </a>
+                </td>
+                
+                
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay grados asignados a este profesor.</p>
+    {% endif %}
+
+        <br>
+    <a href="{{ url_for('profesores.profesores') }}">Volver a lista de profesores</a>
+{% endblock %}

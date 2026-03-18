@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hola</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('estudiantes') }}">Lista Estudiantes</a></li>
+            <li><a href="{{ url_for('profesores.profesores') }}">Lista Profesores</a></li>
+            <li><a href="{{ url_for('loginvic') }}">Login Adm</a></li>
+        </ul>
+    </nav>
+    <h1>¡Hola mundo desde Flask con templates y static!</h1>
+    <h2>Si ves este mensaje, todo funciona 👌</h2>
+</body>
+</html>
