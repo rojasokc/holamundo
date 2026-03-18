@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 
 import re
 import os
@@ -16,6 +18,7 @@ from pages.routes.metasdeaycl import metasdea_bp
 from pages.routes.cformativo import cformativo_bp
 from pages.routes.reporte import reporte_bp
 from pages.db import get_db_connection
+
 
 # Crear la aplicación Flask
 app = Flask(
@@ -3316,4 +3319,4 @@ def hello():
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
