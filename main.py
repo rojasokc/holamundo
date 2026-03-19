@@ -1000,7 +1000,7 @@ def onlycreagradx():
 
     cursor.execute("""
         SELECT * 
-        FROM tucodata.colgrados 
+        FROM colgrados 
         WHERE TRIM(scodeemp) = %s
         group by nivelgrado
                    ;
@@ -1014,7 +1014,7 @@ def onlycreagradx():
 
     cursor.execute("""
         SELECT * 
-        FROM tucodata.colgrados 
+        FROM colgrados 
         WHERE TRIM(scodeemp) = %s
         group by subnivel
                    ;
@@ -1037,7 +1037,7 @@ def onlycreagradx():
 
         cursor.execute("""
             SELECT * 
-            FROM tucodata.colgrados 
+            FROM colgrados 
             WHERE TRIM(scodeemp) = %s and name LIKE %s
         """, (scodeemp1,
               f"{searchgrado}%",
@@ -1045,7 +1045,7 @@ def onlycreagradx():
     else:
         cursor.execute("""
             SELECT * 
-            FROM tucodata.colgrados 
+            FROM colgrados 
             WHERE TRIM(scodeemp) = %s and name = "zzzzz"
         """, (scodeemp1,
               
