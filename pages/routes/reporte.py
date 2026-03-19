@@ -198,7 +198,7 @@ def index():
 
     cursor.execute("""
         SELECT * 
-        FROM tucodata.colgrados 
+        FROM colgrados 
         WHERE TRIM(scodeemp) = %s
         group by nivelgrado
                    ;
@@ -207,7 +207,7 @@ def index():
 
     cursor.execute("""
         SELECT * 
-        FROM tucodata.colgrados 
+        FROM colgrados 
         WHERE TRIM(scodeemp) = %s and nivelgrado = %s
         group by nivelgrado
                    ;
