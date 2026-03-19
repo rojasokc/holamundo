@@ -21,7 +21,6 @@
 
 import os
 import mysql.connector
-import string
 from urllib.parse import urlparse
 
 def get_db_connection():
