@@ -28,3 +28,5 @@ def get_db_connection():
     cursor.close()
 
     return conn
+
+print("hasta aqui 333")
