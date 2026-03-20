@@ -14,3 +14,4 @@ def get_db_connection():
 
 print("DB_HOST:", os.getenv("DB_HOST"))
 print("DB_PORT:", os.getenv("DB_PORT"))
+print("MYSQLHOST:", os.getenv("MYSQLHOST"))
