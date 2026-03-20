@@ -44,6 +44,7 @@ app.register_blueprint(reporte_bp)
 # Definir la ruta principal
 @app.route("/")
 def inicio():
+    print("🔥 MAIN NUEVO DESPLEGADO 🔥")
     return render_template("index.html")
     #return "Flask funcionando"
 #def home():
@@ -80,6 +81,8 @@ def verificar_login():
     if "usuario" not in session:
         return redirect(url_for("loginvic"))
 
+
+print("🔥 MAIN NUEVO DESPLEGADO 2222🔥")
 
 @app.route("/onlycreatepp")
 def onlycreatepp():
