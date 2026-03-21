@@ -44,12 +44,9 @@ nav ul li > a {
     transition: background 0.2s ease, color 0.2s ease;
 }
 
-nav ul li > a:hover {
-    background: #e7f1ff;
-    color: #0d6efd;
-}
 
-/* ===== DROPDOWN PEGADO ===== */
+
+/* ===== DROPDOWN PEGADO ===== #0d6efd;*/
 nav ul li ul {
     display: none;
     position: absolute;
@@ -88,54 +85,103 @@ nav ul li ul li hr {
     margin: 6px 0;
     border-color: #eaeaea;
 }
+
+/* ===== HOVER MENU PRINCIPAL ===== */
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+    background-color: #0b5ed7; /* azul más fuerte */
+    color: #ffffff !important;
+    border-radius: 6px;
+}
+
+/* ===== HOVER SUBMENÚ ===== */
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: #e9ecef; /* gris claro */
+    color: #000000;
+}
+
 </style>
 
 
 <!-- Barra de navegación  {{ url_for('Gestionacade') }} -->
 
-<nav class="mb-3 shadow-sm">
-    <ul class="d-flex gap-3">
-        <li>
-            <a href="">Parametros globales</a>
-            <ul>
-                <li><a href="{{ url_for('onlyallparam') }}">Parametros Generales</a></li>
-                <li><a href="{{ url_for('onlyparam') }}">Parametros de Notas</a></li>
-            </ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+  <div class="container">
+    
+    <!-- Marca -->
+    <a class="navbar-brand fw-bold text-white" href="#">Skyvic</a>
+
+    <!-- Botón hamburguesa -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú -->
+    <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+      <ul class="navbar-nav">
+
+        <!-- Parámetros -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown">
+            Parámetros Globales
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('onlyallparam') }}">Parámetros Generales</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('onlyparam') }}">Parámetros de Notas</a></li>
+          </ul>
         </li>
-        <li>
-            <a href="">Gestion académica</a>
-            <ul>
-                <li><a href="{{ url_for('onlycreaprofx') }}">Crear profesor</a></li>
-                <li><a href="{{ url_for('onlycreagradx') }}">Crear Grados</a></li>
-                <li><a href="{{ url_for('creaareas') }}">Crear Areas</a></li>
-                <li><a href="{{ url_for('creatablaasignaturas') }}">Tabla de Asignaturas</a></li>
-                <li><a href="{{ url_for('creaasignaturas') }}">Asignaturas por Grado</a></li>
-                <li><a href="{{ url_for('estudiantes.index') }}">Crear Estudiantes</a></li>
+
+        <!-- Gestión académica -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown">
+            Gestión académica
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('onlycreaprofx') }}">Crear profesor</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('onlycreagradx') }}">Crear grados</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('creaareas') }}">Crear Areas</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('creatablaasignaturas') }}">Tabla de Asignaturas</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('creaasignaturas') }}">Asignaturas por Grado</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('estudiantes.index') }}">Crear Estudiantes</a></li>
                 <li><hr></li>
-                <li><a href="{{ url_for('metasdea.index') }}">Metas de aprendizaje | Competencia laboral</a></li>
-                <li><a href="{{ url_for('cformativo.index') }}">Concepto formativo</a></li>
-                <li><a href="{{ url_for('reporte.index') }}">Reportes</a></li>
-            </ul>
+                <li><a class="dropdown-item" href="{{ url_for('metasdea.index') }}">Metas de aprendizaje | Competencia laboral</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('cformativo.index') }}">Concepto formativo</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('reporte.index') }}">Reportes</a></li>            
+          </ul>
+        </li>
+
+        <!-- Estudiantes -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown">
+            Gestión de Estudiantes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('status') }}">Status</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('notaspp') }}">Notas PP</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('onlynotasestudiante') }}">Notas de estudiante</a></li>
+          </ul>
         </li>
         <li>
-            <a href="">Gestión de estudiantes</a>
-            <ul>
-                <li><a href="{{ url_for('status') }}">Status</a></li>
-                <li><a href="{{ url_for('notaspp') }}">Notas PP</a></li>
-                <li><a href="{{ url_for('onlynotasestudiante') }}">Notas de estudiante</a></li>
-            </ul>
-        </li>
-        <li>
+
+
             {% if session.get("level") == "5" %}
-            <a href="">Admin area</a>
-            <ul>
-                <li><a href="{{ url_for('onlyeditempresa') }}">Administración Instituto</a></li>
-                <li><a href="{{ url_for('onlymoduserppal') }}">Editar - Crear Admin</a></li>
-                <li><a href="{{ url_for('onlyboletines') }}">Boletines</a></li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown">
+                Admin
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ url_for('onlyeditempresa') }}">Administración Instituto</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('onlymoduserppal') }}">Editar - Crear Admin</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('onlyboletines') }}">Boletines</a></li>
             </ul>
+            </li>
             {% endif %}
-        </li>        
-    </ul>
+        </li> 
+      </ul>
+    </div>
+
+  </div>
 </nav>
 
 <div class="container">
