@@ -24,12 +24,6 @@ nav ul {
     margin: 0;
 }
 
-nav > ul {
-    display: flex;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-}
-
 nav ul li {
     position: relative;
 }
@@ -55,7 +49,7 @@ nav ul li ul {
     margin-top: 0;       /* sin espacio */
     min-width: 220px;
     background: #ffffff;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 0px 0px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.08);
     padding: 6px 0;
     z-index: 1000;
@@ -89,9 +83,9 @@ nav ul li ul li hr {
 /* ===== HOVER MENU PRINCIPAL ===== */
 .navbar .nav-link:hover,
 .navbar .nav-link:focus {
-    background-color: #0b5ed7; /* azul más fuerte */
+    background-color: #043277; /* azul más fuerte 0b5ed7*/
     color: #ffffff !important;
-    border-radius: 6px;
+    border-radius: 0px;
 }
 
 /* ===== HOVER SUBMENÚ ===== */
@@ -99,6 +93,14 @@ nav ul li ul li hr {
 .dropdown-menu .dropdown-item:focus {
     background-color: #e9ecef; /* gris claro */
     color: #000000;
+}
+
+.navbar-nav {
+    gap: 2rem;
+}
+
+.dropdown-menu {
+    border-radius: 0 !important;
 }
 
 </style>
@@ -113,12 +115,12 @@ nav ul li ul li hr {
     <a class="navbar-brand fw-bold text-white" href="#">Skyvic</a>
 
     <!-- Botón hamburguesa -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+    <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Menú -->
-    <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+    <div class="collapse navbar-collapse justify-content-center " id="navbarMain">
       <ul class="navbar-nav">
 
         <!-- Parámetros -->
@@ -183,6 +185,7 @@ nav ul li ul li hr {
 
   </div>
 </nav>
+
 
 <div class="container">
     <!-- Aquí se injecta el contenido específico -->
