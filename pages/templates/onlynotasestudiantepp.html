@@ -102,7 +102,7 @@
                                 <!-- aqui el grado nuevo al que se mueve el estudiante-->
                                 <div class="input-group input-group-sm" style="max-width: 450px;">
 
-<label >grado: </label>
+<label >Mover a este grado: </label>
 
                                     <select class="form-select" name="cualgradonew" id="cualgradonew">
                                         <option value="">Grado</option>
@@ -201,6 +201,13 @@
 
 <div class="text-muted p-3">
 Seleccione un estudiante
+</div>
+
+</div>
+<div id="tabla_area_body">
+
+<div class="text-muted p-3">
+Seleccione un estudiante dos
 </div>
 
 </div>
@@ -332,6 +339,7 @@ document.addEventListener("DOMContentLoaded", function () {
         barraNombre.style.display = "block";
 
         fetch(`/estudiantes/ajax_notas_estudiante?codegrad=${codegrad}&codeestu=${codeestu}`)
+        
         .then(response => response.text())
         .then(html => {
 
@@ -420,6 +428,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 </script>
 
+<!-- muestra las casillas de habilita -->
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -441,6 +450,7 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 </script>
+
 <!-- Este escrip es copia de grados.js carga los grados segun el radiobuton Bachil, PRIMAR, PREBAS-->
 <script>
 
@@ -519,16 +529,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
        // cuando se marca el checkbox
-    chkMover.addEventListener("change", cargarAsignaturas);
+    //chkMover.addEventListener("change", cargarAsignaturas);
 
     // cuando cambia el grado nuevo
-    selectGradNew.addEventListener("change", cargarAsignaturas);
+    //selectGradNew.addEventListener("change", cargarAsignaturas);
 
 });
 </script>
 
-<!-- aqui se lee la ruta para comparar diccionarios -->
-
+<!-- aqui se lee la ruta "compara" para comparar diccionarios o sea la grid actual con la grid nueva-->
+<!-- esta funcion esta en routes/estudiantes.py -->
 <script>
 
 document.getElementById("btn_mover_grado").addEventListener("click", function(){
@@ -548,6 +558,30 @@ document.getElementById("btn_mover_grado").addEventListener("click", function(){
     .then(response => response.text())
     .then(data => {
         console.log(data);
+
+        const selectNew = document.getElementById("cualgradonew");
+        const nombreGradoNuevo = selectNew.options[selectNew.selectedIndex].text;
+
+        const txtNombre = document.getElementById("nombre_estudiante_txt");
+
+        // Agrega el mensaje
+        //txtNombre.textContent += ` - se movió al grado "${nombreGradoNuevo}"`;
+
+        const nombreOriginal = txtNombre.textContent.split(" - ")[0];
+        txtNombre.textContent = `${nombreOriginal} - se movió al grado "${nombreGradoNuevo}"`;
+
+        // 🔹 1. desmarcar checkbox mover
+        const chkMover = document.querySelector('input[name="chk_moverestudiante"]');
+        if (chkMover) chkMover.checked = false;
+
+        // 🔹 2. desmarcar checkbox ver panel
+        const chkPanel = document.getElementById("chk_verpanel");
+        if (chkPanel) chkPanel.checked = false;
+
+        // 🔹 3. ocultar el panel
+        const panel = document.getElementById("panel_acciones_estudiante");
+        if (panel) panel.style.display = "none";
+        
     });
 
 });

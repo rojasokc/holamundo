@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from pages.db import get_db_connection   # ajusta el import según tu proyecto
+from db import get_db_connection   # ajusta el import según tu proyecto
 from datetime import date, datetime
 
 #SCODEEMP = "31"
-from pages.config import (
+from config import (
     ALECTIVO_ACTUAL,
     PERIODO_ACTUAL,
     SCODEEMP,
@@ -530,6 +530,17 @@ def ajax_notas_estudiante():
 
     notasyasignaturasact = cursor.fetchall()
 
+    cursor.execute("""
+    SELECT areasxmate.nombre, caliarea.* 
+        from caliarea join areasxmate 
+            ON areasxmate.codearea = caliarea.codearea 
+        where caliarea.codegrad = %s 
+        and caliarea.codeestu = %s 
+        and trim(caliarea.scodeemp) = %s
+                   
+    """, (codegrad, codeestu, scodeemp1))
+    notasyareasact = cursor.fetchall()
+
     cursor.close()
     conn.close()
 
@@ -538,8 +549,12 @@ def ajax_notas_estudiante():
         notasyasignaturasact=notasyasignaturasact,
         periodo=periodo,
         cualestudiante=cualestudiante,
-        chk_verhabilita=chk_verhabilita
+        chk_verhabilita=chk_verhabilita,
+        notasyareasact=notasyareasact
     )
+
+
+
 
 #esta es la info del nuevo grado
 @estudiantes_bp.route('/asignatxgradonew/<codegrad>')
@@ -574,7 +589,8 @@ def compara():
 
     codeestu = request.args.get("codeestu")
     codegrad = request.args.get("codegrad")
-    codegradnew = request.args.get("codegradnew")
+    codegradnew = request.args.get("codegradnew") # esto esta bien, viene de script
+    
 
     print(f"codeestu envia: {codeestu}")
     print("codegrad envia: ", codegrad)
@@ -611,7 +627,12 @@ def compara():
         AND TRIM(scodeemp) = %s
     """, (codegradnew, scodeemp1))
 
-    asignaturasnuevas = cursor.fetchall()
+    notasyasignaturasnuevas = cursor.fetchall()
+
+    #aqui saco el nombre del grado
+    cursor.execute("SELECT name FROM colgrados WHERE codegrad = %s", (codegradnew,))
+    grado = cursor.fetchone()
+    nombre_gradonew = grado["name"] if grado else None
 
     # ===============================
     # 3️⃣ recorrer diccionario actual
@@ -632,12 +653,62 @@ def compara():
 
     print("ASIGNATURAS NUEVAS")
 
-    for r in asignaturasnuevas:
+    for n in notasyasignaturasnuevas:
 
-        codemate = r["codemate"]
-        nombre = r["nombre"]
+        codemate = n["codemate"]
+        nombre = n["nombre"]
 
         print(codemate, nombre)
+
+    #aqui 
+    for r in notasyasignaturasact:
+        codemateact = r["codemate"]
+        nombreact = r["nombre"]
+
+        for n in notasyasignaturasnuevas:
+            codematenew = n["codemate"]
+            nombrenew = n["nombre"]
+
+            if nombreact == nombrenew:
+                print(f'cambio grado actu: {codegrad} por grado: {codegradnew} asigna: {nombreact} code: {codemateact} por: {codematenew}' )
+
+                cursor.execute("""
+                UPDATE calinotas 
+                SET codemate =%s, 
+                    codegrad =%s 
+                    where codeestu = %s 
+                    and codegrad = %s 
+                    and codemate = %s
+                """, ( codematenew,codegradnew, codeestu, codegrad, codemateact))
+                conn.commit()
+                #flash("Estudiante movido a otro grado.", "success")
+
+                cursor.execute("""
+                UPDATE calimate 
+                SET codemate =%s, 
+                    codegrad =%s 
+                    where codeestu = %s 
+                    and codegrad = %s 
+                    and codemate = %s
+                """, ( codematenew,codegradnew, codeestu, codegrad, codemateact))
+                conn.commit()
+        
+                cursor.execute("""
+                UPDATE caliarea 
+                SET codegrad =%s 
+                    where codeestu = %s 
+                    and codegrad = %s
+                """, ( codegradnew, codeestu, codegrad))
+                conn.commit()
+
+    cursor.execute("""
+    UPDATE estudents 
+    SET codegrad =%s, 
+        gradeNY =%s, 
+        grade =%s 
+        where scodeest = %s
+    """, ( codegradnew,codegradnew, nombre_gradonew, codeestu))
+    conn.commit()
 
     cursor.close()
     conn.close()
