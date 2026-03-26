@@ -530,17 +530,6 @@ def ajax_notas_estudiante():
 
     notasyasignaturasact = cursor.fetchall()
 
-    cursor.execute("""
-    SELECT areasxmate.nombre, caliarea.* 
-        from caliarea join areasxmate 
-            ON areasxmate.codearea = caliarea.codearea 
-        where caliarea.codegrad = %s 
-        and caliarea.codeestu = %s 
-        and trim(caliarea.scodeemp) = %s
-                   
-    """, (codegrad, codeestu, scodeemp1))
-    notasyareasact = cursor.fetchall()
-
     cursor.close()
     conn.close()
 
@@ -549,8 +538,8 @@ def ajax_notas_estudiante():
         notasyasignaturasact=notasyasignaturasact,
         periodo=periodo,
         cualestudiante=cualestudiante,
-        chk_verhabilita=chk_verhabilita,
-        notasyareasact=notasyareasact
+        chk_verhabilita=chk_verhabilita
+        
     )
 
 
@@ -716,4 +705,38 @@ def compara():
     return "ok"
 
 
+@estudiantes_bp.route('/ajax_notasarea_estudiante')
+def ajax_notasarea_estudiante():
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    scodeemp1 = SCODEEMP
+    periodo = PERIODO_ACTUAL
+
+    chk_verhabilita = bool(request.args.get("chk_verhabilita"))
+    
+
+    cualestudiante = request.args.get("cualestudiante")
+    
+    codeestu = request.args.get("codeestu")
+    codegrad = request.args.get("codegrad")
+
+    cursor.execute("""
+    SELECT areasxmate.nombre, caliarea.* 
+        from caliarea join areasxmate 
+            ON areasxmate.codearea = caliarea.codearea 
+        where caliarea.codegrad = %s 
+        and caliarea.codeestu = %s 
+        and trim(caliarea.scodeemp) = %s
+                   
+    """, (codegrad, codeestu, scodeemp1))
+    notasyareasact = cursor.fetchall()
+
+
+    cursor.close()
+    conn.close()
+    return render_template(
+        "estudiantes/_filas_areas.html",
+        notasyareasact=notasyareasact)
 

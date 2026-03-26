@@ -38,7 +38,7 @@
                                     <input class="form-check-input" type="radio" name="nivel_radio" value="3" {% if
                                         nivel_radio=='3' %}checked{% endif %}>
                                     <label class="form-check-label">Bachill</label>
-                                </div> ||A
+                                </div> 
                                 <div class="input-group input-group-sm" style="max-width: 250px;">
                                     <select class="form-select" name="cualgrado" id="cualgrado">
                                         <option value="">Grado</option>
@@ -77,7 +77,7 @@
 
    
                                 </div>
-                               aqui
+                               
                                     <div class="input-group-text">
                                         <input class="form-check-input mt-0" type="checkbox" name="chk_verpanel"
                                         id="chk_verpanel"
@@ -325,9 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const codegrad = selectGrado.value;
         const codeestu  = selectEstudiante.value;
 
-        console.log("grado:",codegrad);
-        console.log("estudiante:",codeestu);
-
         if(!codegrad || !codeestu){
             alert("Seleccione grado y estudiante");
             checkbox.checked = false;
@@ -338,16 +335,32 @@ document.addEventListener("DOMContentLoaded", function () {
         txtNombre.textContent = nombreEst;
         barraNombre.style.display = "block";
 
-        fetch(`/estudiantes/ajax_notas_estudiante?codegrad=${codegrad}&codeestu=${codeestu}`)
-        
-        .then(response => response.text())
-        .then(html => {
+        Promise.all([
+            fetch(`/estudiantes/ajax_notas_estudiante?codegrad=${codegrad}&codeestu=${codeestu}`),
+            fetch(`/estudiantes/ajax_notasarea_estudiante?codegrad=${codegrad}&codeestu=${codeestu}`)
+        ])
+        .then(async ([respNotas, respAreas]) => {
 
-            tablaBody.innerHTML = html;
+            if (!respNotas.ok || !respAreas.ok){
+                throw new Error("Error en servidor");
+            }
+
+            const htmlNotas = await respNotas.text();
+            const htmlAreas = await respAreas.text();
+
+            document.getElementById("tabla_notas_body").innerHTML = htmlNotas;
+            document.getElementById("tabla_area_body").innerHTML = htmlAreas;
 
         })
-        .catch(error => console.log("error ajax:", error));
+        .catch(error => {
+            console.log(error);
 
+            document.getElementById("tabla_notas_body").innerHTML =
+                `<div class="text-danger p-2">Error cargando notas</div>`;
+
+            document.getElementById("tabla_area_body").innerHTML =
+                `<div class="text-danger p-2">Error cargando áreas</div>`;
+        });
     }
 
     checkbox.addEventListener("change", function(){
@@ -541,47 +554,37 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- esta funcion esta en routes/estudiantes.py -->
 <script>
 
-document.getElementById("btn_mover_grado").addEventListener("click", function(){
+document.addEventListener("DOMContentLoaded", function(){
 
-    const codeestu = document.getElementById("cualestudiante").value;
-    const codegrad = document.getElementById("cualgrado").value;
-    const codegradnew = document.getElementById("cualgradonew").value;
-    //const form = document.querySelector("form");
-    //const datos = new FormData(form);
+    document.getElementById("btn_mover_grado").addEventListener("click", function(){
 
-    console.log("codeestu:", codeestu);
-    console.log("codegrad:", codegrad);
-    console.log("codegradnew:", codegradnew);
+        const codeestu = document.getElementById("cualestudiante").value;
+        const codegrad = document.getElementById("cualgrado").value;
+        const codegradnew = document.getElementById("cualgradonew").value;
 
-    fetch(`/estudiantes/compara?codeestu=${codeestu}&codegrad=${codegrad}&codegradnew=${codegradnew}`)
-    //fetch("/estudiantes/compara?" + new URLSearchParams(datos))
-    .then(response => response.text())
-    .then(data => {
-        console.log(data);
+        fetch(`/estudiantes/compara?codeestu=${codeestu}&codegrad=${codegrad}&codegradnew=${codegradnew}`)
+        .then(response => response.text())
+        .then(data => {
 
-        const selectNew = document.getElementById("cualgradonew");
-        const nombreGradoNuevo = selectNew.options[selectNew.selectedIndex].text;
+            const selectNew = document.getElementById("cualgradonew");
+            const nombreGradoNuevo = selectNew.options[selectNew.selectedIndex].text;
 
-        const txtNombre = document.getElementById("nombre_estudiante_txt");
+            const txtNombre = document.getElementById("nombre_estudiante_txt");
 
-        // Agrega el mensaje
-        //txtNombre.textContent += ` - se movió al grado "${nombreGradoNuevo}"`;
+            const nombreOriginal = txtNombre.textContent.split(" - ")[0];
+            txtNombre.textContent = `${nombreOriginal} - se movió al grado "${nombreGradoNuevo}"`;
 
-        const nombreOriginal = txtNombre.textContent.split(" - ")[0];
-        txtNombre.textContent = `${nombreOriginal} - se movió al grado "${nombreGradoNuevo}"`;
+            const chkMover = document.querySelector('input[name="chk_moverestudiante"]');
+            if (chkMover) chkMover.checked = false;
 
-        // 🔹 1. desmarcar checkbox mover
-        const chkMover = document.querySelector('input[name="chk_moverestudiante"]');
-        if (chkMover) chkMover.checked = false;
+            const chkPanel = document.getElementById("chk_verpanel");
+            if (chkPanel) chkPanel.checked = false;
 
-        // 🔹 2. desmarcar checkbox ver panel
-        const chkPanel = document.getElementById("chk_verpanel");
-        if (chkPanel) chkPanel.checked = false;
+            const panel = document.getElementById("panel_acciones_estudiante");
+            if (panel) panel.style.display = "none";
 
-        // 🔹 3. ocultar el panel
-        const panel = document.getElementById("panel_acciones_estudiante");
-        if (panel) panel.style.display = "none";
-        
+        });
+
     });
 
 });
