@@ -3,7 +3,7 @@ from pages.db import get_db_connection   # ajusta el import según tu proyecto
 from datetime import date, datetime
 
 #SCODEEMP = "31"
-from config import (
+from pages.config import (
     ALECTIVO_ACTUAL,
     PERIODO_ACTUAL,
     SCODEEMP,
