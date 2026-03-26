@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from db import get_db_connection   # ajusta el import según tu proyecto
+from pages.db import get_db_connection   # ajusta el import según tu proyecto
 from datetime import date, datetime
 
 #SCODEEMP = "31"
